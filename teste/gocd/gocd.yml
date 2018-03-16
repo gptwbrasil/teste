@@ -1,0 +1,73 @@
+#ci.gocd.yaml
+format_version: 2
+environments:
+  testing:
+    environment_variables:
+      DEPLOYMENT: testing
+    secure_variables:
+      ENV_PASSWORD: "s&Du#@$xsSa"
+    pipelines:
+      - example-deploy-testing
+      - build-testing
+pipelines:
+  Build:
+    group: teste # note that the group name can contain only of alphanumeric & underscore characters
+    lock_behavior: none
+#    parameters: # list of parameters that can be configured for a pipeline
+#      param1: value1
+    materials:
+      GIT: # this is the name of material, the name can contain only of alphanumeric & underscore characters
+#        # keyword git says about type of material and url at once
+        git: https://github.com/gptwbrasil/teste.git
+        branch: master
+#      myupstream:
+#        # type is optional here, material type is implied based on presence of pipeline and stage fields
+#        # type: dependency
+#        pipeline: pipe2
+#        stage: test
+
+#  mypipe1: # definition of mypipe1 pipeline
+#    group: mygroup # note that the group name can contain only of alphanumeric & underscore characters
+#    label_template: "${mygit[:8]}"
+#    lock_behavior: none
+#    parameters: # list of parameters that can be configured for a pipeline
+#      param1: value1
+#    materials:
+#      mygit: # this is the name of material, the name can contain only of alphanumeric & underscore characters
+#        # keyword git says about type of material and url at once
+#        git: http://my.example.org/mygit.git
+#        branch: ci
+#      myupstream:
+#        # type is optional here, material type is implied based on presence of pipeline and stage fields
+#        # type: dependency
+#        pipeline: pipe2
+#        stage: test
+    stages: # list of stages in order
+      - build: # name of stage
+          clean_workspace: true
+          jobs:
+            build: # name of the job
+#              resources:
+#               - net45
+#              artifacts:
+#               - build:
+#                   source: bin/
+#                   destination: build
+#               - test:
+#                   source: tests/
+#                   destination: test-reports/
+#              tabs:
+#                report: test-reports/index.html
+              tasks: # ordered list of tasks to execute in job csharp
+               - fetch:
+                   pipeline: pipe2
+                   stage: build
+                   job: test
+                   source: test-bin/
+                   destination: bin/
+               - exec: # indicates type of task
+                   command: ls
+#                   arguments:
+#                    - "VERBOSE=true"
+#                #shorthand for script-executor plugin
+#               - script: ./build.sh ci
