@@ -51,7 +51,7 @@ pipelines:
 #                job: test
 #                source: test-bin/
 #                destination: bin/
-            - exec: # indicates type of task
+              - exec: # indicates type of task
                 command: ls
 #                arguments:
 #                - "VERBOSE=true"
